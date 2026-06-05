@@ -20,7 +20,13 @@ class JobOrchestratorConfig(NautobotAppConfig):
     required_settings = []
     default_settings = {}
     docs_view_name = "plugins:job_orchestrator:docs"
-    searchable_models = []
+    searchable_models = ["job_orchestrator.Workflow"]
+
+    def ready(self):
+        """Register signal receivers once the app registry is ready."""
+        super().ready()
+        # Importing connects the post_save receiver that drives workflow advancement.
+        from job_orchestrator import signals  # noqa: F401  pylint:disable=import-outside-toplevel,unused-import
 
 
 config = JobOrchestratorConfig  # pylint:disable=invalid-name

@@ -309,3 +309,6 @@ public
 /compose.yaml
 /dump.sql
 /job_orchestrator/static/job_orchestrator/docs
+
+# Job Orchestrator UI build
+/ui/node_modules

@@ -205,26 +205,32 @@ def build(context, force_rm=False, cache=True):
 
 def _ensure_creds_env_file(context):
     """Ensure that the development/creds.env file exists."""
-    if not os.path.exists(
-        os.path.join(context.job_orchestrator.compose_dir, "creds.env")
-    ):
+    if not os.path.exists(os.path.join(context.job_orchestrator.compose_dir, "creds.env")):
         # Warn the user that the creds.env file does not exist and that we are copying the example file to it
-        print(
-            "⚠️⚠️ The creds.env file does not exist, using the example file to create it. ⚠️⚠️"
-        )
+        print("⚠️⚠️ The creds.env file does not exist, using the example file to create it. ⚠️⚠️")
         # Copy the creds.example.env file to creds.env
         shutil.copy(
-            os.path.join(
-                context.job_orchestrator.compose_dir, "creds.example.env"
-            ),
+            os.path.join(context.job_orchestrator.compose_dir, "creds.example.env"),
             os.path.join(context.job_orchestrator.compose_dir, "creds.env"),
         )
+
 
 @task
 def generate_packages(context):
     """Generate all Python packages inside docker and copy the file locally under dist/."""
     command = "poetry build"
     run_command(context, command)
+
+
+@task(help={"install": "Run 'npm install' before building (default: True)."})
+def build_ui(context, install=True):
+    """Build the React Flow workflow-editor bundle on the host (requires Node.js/npm).
+
+    Outputs job_orchestrator/static/job_orchestrator/js/editor.bundle.{js,css}.
+    """
+    if install:
+        context.run("npm --prefix ui install")
+    context.run("npm --prefix ui run build")
 
 
 def _get_docker_nautobot_version(context, nautobot_ver=None, python_ver=None):

@@ -24,7 +24,9 @@ packages = [
 ]
 include = [
     # Poetry by default will exclude files that are in .gitignore
-    { path = "job_orchestrator/static/job_orchestrator/docs/**/*", format = ["sdist", "wheel"] }
+    { path = "job_orchestrator/static/job_orchestrator/docs/**/*", format = ["sdist", "wheel"] },
+    # Built workflow-editor bundle (produced by `cd ui && npm run build`).
+    { path = "job_orchestrator/static/job_orchestrator/js/**/*", format = ["sdist", "wheel"] }
 ]
 
 [tool.poetry.dependencies]
@@ -82,9 +84,20 @@ ignore = ".venv"
 no-docstring-rgx = "^(_|test_|Meta$)"
 
 [tool.pylint.messages_control]
+# Disabled checks are deliberate, project-wide stances rather than per-line exceptions:
+#  * too-many-ancestors / too-few-public-methods: unavoidable with Django/Nautobot base-class
+#    chains and Meta/config inner classes.
+#  * import-outside-toplevel: lazy imports are used throughout to break circular imports between
+#    models/engine/tasks/signals and to keep module import-time free of the extras app registry.
+#  * nb-use-fields-all: serializer/form/filterset fields are enumerated explicitly on purpose to
+#    keep the API/UI surface intentional rather than auto-expanding with the model.
 disable = """,
     line-too-long,
     too-many-positional-arguments,
+    too-many-ancestors,
+    too-few-public-methods,
+    import-outside-toplevel,
+    nb-use-fields-all,
     nb-warn-dunder-filter-field,
     nb-no-search-function,
     nb-no-char-filter-q,
