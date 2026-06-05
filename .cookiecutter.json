@@ -1,0 +1,29 @@
+{
+    "cookiecutter": {
+        "codeowner_github_usernames": "jtdub",
+        "full_name": "James Williams",
+        "email": "james.williams@jtdub.com",
+        "github_org": "jtdub",
+        "app_name": "job_orchestrator",
+        "verbose_name": "Job Orchestrator",
+        "app_slug": "job-orchestrator",
+        "project_slug": "nautobot-app-job-orchestrator",
+        "repo_url": "https://github.com/jtdub/nautobot-app-job-orchestrator",
+        "base_url": "job-orchestrator",
+        "camel_name": "JobOrchestrator",
+        "project_short_description": "Job Orchestrator",
+        "model_class_name": "None",
+        "open_source_license": "Apache-2.0",
+        "docs_base_url": "https://docs.nautobot.com",
+        "docs_app_url": "https://docs.nautobot.com/projects/job-orchestrator/en/latest",
+        "_extensions": [
+            "local_extensions.camel_case_to_kebab",
+            "local_extensions.camel_case_to_words",
+            "local_extensions.NautobotVersions"
+        ],
+        "_template": "https://github.com/nautobot/cookiecutter-nautobot-app",
+        "_output_dir": "/Users/jtdub/Documents/code",
+        "_repo_dir": "/Users/jtdub/.cookiecutters/cookiecutter-nautobot-app/nautobot-app",
+        "_checkout": null
+    }
+}
