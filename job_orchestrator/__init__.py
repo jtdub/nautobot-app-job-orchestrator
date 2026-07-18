@@ -20,7 +20,8 @@ class JobOrchestratorConfig(NautobotAppConfig):
     required_settings = []
     default_settings = {}
     docs_view_name = "plugins:job_orchestrator:docs"
-    searchable_models = ["job_orchestrator.Workflow"]
+    # Bare lowercase model names; Nautobot prefixes the app label itself when building search entries.
+    searchable_models = ["workflow"]
 
     def ready(self):
         """Register signal receivers once the app registry is ready."""

@@ -1,0 +1,45 @@
+{% extends "generic/object_retrieve.html" %}
+{% load helpers %}
+
+{% block content_left_page %}
+  <div class="panel panel-default">
+    <div class="panel-heading"><strong>Execution</strong></div>
+    <table class="table table-hover panel-body attr-table">
+      <tr>
+        <td>Workflow</td>
+        <td><a href="{% url 'plugins:job_orchestrator:workflow' pk=object.workflow.pk %}">{{ object.workflow.name }}</a></td>
+      </tr>
+      <tr><td>Status</td><td>{{ object.status }}</td></tr>
+      <tr><td>Started by</td><td>{{ object.started_by|placeholder }}</td></tr>
+      <tr><td>Started</td><td>{{ object.started_time|placeholder }}</td></tr>
+      <tr><td>Completed</td><td>{{ object.completed_time|placeholder }}</td></tr>
+      <tr><td>Failure reason</td><td>{{ object.failure_reason|placeholder }}</td></tr>
+    </table>
+  </div>
+{% endblock content_left_page %}
+
+{% block content_right_page %}
+  <div class="panel panel-default">
+    <div class="panel-heading"><strong>Node Executions</strong></div>
+    <table class="table table-hover panel-body">
+      <thead>
+        <tr><th>Node</th><th>Status</th><th>Job Result</th></tr>
+      </thead>
+      <tbody>
+        {% for node in object.node_executions.all %}
+          <tr>
+            <td>{{ node.node_id }}</td>
+            <td>{{ node.status }}</td>
+            <td>
+              {% if node.job_result %}
+                <a href="{{ node.job_result.get_absolute_url }}">{{ node.job_result.pk|truncatechars:8 }}</a>
+              {% else %}—{% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3" class="text-muted">No node executions.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content_right_page %}

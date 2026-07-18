@@ -1,0 +1,40 @@
+{% extends "generic/object_retrieve.html" %}
+{% load helpers %}
+
+{% block extra_buttons %}
+  <a href="{% url 'plugins:job_orchestrator:workflow_editor' pk=object.pk %}" class="btn btn-primary">
+    <span class="mdi mdi-sitemap" aria-hidden="true"></span> Open Editor
+  </a>
+{% endblock extra_buttons %}
+
+{% block content_left_page %}
+  <div class="panel panel-default">
+    <div class="panel-heading"><strong>Workflow</strong></div>
+    <table class="table table-hover panel-body attr-table">
+      <tr><td>Name</td><td>{{ object.name }}</td></tr>
+      <tr><td>Description</td><td>{{ object.description|placeholder }}</td></tr>
+      <tr><td>Enabled</td><td>{{ object.enabled|render_boolean }}</td></tr>
+      <tr><td>Version</td><td>{{ object.version }}</td></tr>
+      <tr>
+        <td>Nodes / Edges</td>
+        <td>{{ object.graph.nodes|length }} nodes, {{ object.graph.edges|length }} edges</td>
+      </tr>
+    </table>
+  </div>
+{% endblock content_left_page %}
+
+{% block content_right_page %}
+  <div class="panel panel-default">
+    <div class="panel-heading"><strong>Recent Executions</strong></div>
+    <table class="table table-hover panel-body attr-table">
+      {% for execution in object.executions.all|slice:":10" %}
+        <tr>
+          <td><a href="{% url 'plugins:job_orchestrator:workflowexecution' pk=execution.pk %}">{{ execution.created }}</a></td>
+          <td>{{ execution.status }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="2" class="text-muted">No executions yet.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock content_right_page %}

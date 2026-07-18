@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Workflow Editor: {{ workflow.name }}{% endblock title %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="pull-right">
+      <a href="{% url 'plugins:job_orchestrator:workflow' pk=workflow.pk %}" class="btn btn-default">
+        <span class="mdi mdi-arrow-left" aria-hidden="true"></span> Back to Workflow
+      </a>
+    </div>
+    <h1>Workflow Editor: {{ workflow.name }}</h1>
+    <p class="text-muted">
+      Drag jobs onto the canvas, connect them, and label each connection with a condition
+      (on&nbsp;success / on&nbsp;failure / on&nbsp;complete). Save, then run to watch live status.
+    </p>
+  </div>
+</div>
+
+<div id="job-orchestrator-editor" style="height: 75vh; border: 1px solid var(--border-color, #ccc); border-radius: 4px;"></div>
+
+{# Configuration consumed by the bundled React app. #}
+{{ editor_config|default:"" }}
+<script type="application/json" id="job-orchestrator-config">
+{
+  "workflowId": "{{ workflow.pk }}",
+  "workflowName": "{{ workflow.name|escapejs }}",
+  "csrfToken": "{{ csrf_token }}",
+  "urls": {
+    {# Reversed (not hardcoded) so deployments under a URL prefix (FORCE_SCRIPT_NAME) work. #}
+    "jobs": "{% url 'extras-api:job-list' %}",
+    "workflow": "{% url 'plugins-api:job_orchestrator-api:workflow-detail' pk=workflow.pk %}",
+    "execute": "{% url 'plugins-api:job_orchestrator-api:workflow-execute' pk=workflow.pk %}",
+    "executionBase": "{% url 'plugins-api:job_orchestrator-api:workflowexecution-list' %}"
+  }
+}
+</script>
+{% endblock content %}
+
+{% block javascript %}
+{{ block.super }}
+{# React, ReactDOM and @xyflow/react are bundled into the IIFE; the editor page is self-contained. #}
+<link rel="stylesheet" href="{% static 'job_orchestrator/js/editor.bundle.css' %}">
+<script src="{% static 'job_orchestrator/js/editor.bundle.js' %}" defer></script>
+{% endblock javascript %}
